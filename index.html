@@ -1,0 +1,4170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Meu Caderno Virtual</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js">
+    </script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #07111f;
+            --bg-secondary: #0b192a;
+            --panel: #0f2237;
+            --panel-hover: #132c46;
+
+            --border: rgba(255,255,255,0.09);
+
+            --primary: #2587ff;
+            --primary-hover: #4ba0ff;
+
+            --text: #ffffff;
+            --text-secondary: #9fb0c4;
+            --text-dark: #152235;
+
+            --danger: #ef4444;
+            --success: #22c55e;
+
+            --shadow:
+                0 20px 50px rgba(0,0,0,0.35);
+
+            --radius: 18px;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(37,135,255,0.12),
+                    transparent 30%
+                ),
+                var(--bg);
+
+            color: var(--text);
+
+            min-height: 100vh;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* ================================
+           LOGIN
+        ================================= */
+
+        #loginScreen {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(7,17,31,0.8),
+                    rgba(8,24,42,0.96)
+                ),
+                url("capa-caderno-virtual.png")
+                center / cover;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 430px;
+
+            background:
+                rgba(8,20,34,0.90);
+
+            backdrop-filter: blur(18px);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.12);
+
+            border-radius: 25px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 30px 80px rgba(0,0,0,0.5);
+        }
+
+        .login-logo {
+            width: 76px;
+            height: 76px;
+
+            margin:
+                0 auto 20px;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .login-logo img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .login-box h1 {
+            text-align: center;
+
+            font-size: 28px;
+
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+
+            color: var(--text-secondary);
+
+            font-size: 14px;
+
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #c9d5e3;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+        .input {
+            width: 100%;
+
+            background: #091728;
+
+            border: 1px solid var(--border);
+
+            color: white;
+
+            padding: 13px 15px;
+
+            border-radius: 11px;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        .input:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37,135,255,0.12);
+        }
+
+        .btn {
+            border: none;
+
+            border-radius: 11px;
+
+            padding:
+                12px 17px;
+
+            font-weight: 700;
+
+            transition:
+                transform .15s,
+                opacity .15s,
+                background .15s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            width: 100%;
+
+            background: var(--primary);
+
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: #152a41;
+
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+
+            color: white;
+        }
+
+        .login-toggle {
+            margin-top: 18px;
+
+            text-align: center;
+
+            color: var(--text-secondary);
+
+            font-size: 13px;
+        }
+
+        .login-toggle button {
+            border: none;
+
+            background: none;
+
+            color: #59a8ff;
+
+            font-weight: 700;
+
+            margin-left: 5px;
+        }
+
+        #authMessage {
+            margin-top: 15px;
+
+            text-align: center;
+
+            font-size: 13px;
+
+            min-height: 20px;
+        }
+
+        .success-message {
+            color: #55e28c;
+        }
+
+        .error-message {
+            color: #ff7b7b;
+        }
+
+        /* ================================
+           APP
+        ================================= */
+
+        #app {
+            display: none;
+
+            min-height: 100vh;
+        }
+
+        .layout {
+            display: flex;
+
+            min-height: 100vh;
+        }
+
+        /* ================================
+           SIDEBAR
+        ================================= */
+
+        .sidebar {
+            width: 305px;
+
+            flex-shrink: 0;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #091827,
+                    #07121e
+                );
+
+            border-right:
+                1px solid
+                var(--border);
+
+            padding: 22px 16px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            position: sticky;
+
+            top: 0;
+
+            height: 100vh;
+
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                6px 10px 20px;
+
+            border-bottom:
+                1px solid
+                var(--border);
+
+            margin-bottom: 18px;
+        }
+
+        .brand-image {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            flex-shrink: 0;
+        }
+
+        .brand-image img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .brand-text h2 {
+            font-size: 17px;
+        }
+
+        .brand-text span {
+            color: var(--text-secondary);
+
+            font-size: 11px;
+        }
+
+        .menu-section-title {
+            color: #70849a;
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            padding:
+                5px 11px 10px;
+        }
+
+        .menu {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 6px;
+        }
+
+        .menu-item {
+            width: 100%;
+
+            background: transparent;
+
+            border: 1px solid transparent;
+
+            color: #d7e2ee;
+
+            border-radius: 12px;
+
+            padding:
+                11px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            text-align: left;
+
+            transition: .2s;
+        }
+
+        .menu-item:hover {
+            background:
+                rgba(255,255,255,0.04);
+
+            border-color:
+                var(--border);
+        }
+
+        .menu-item.active {
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(37,135,255,.2),
+                    rgba(37,135,255,.08)
+                );
+
+            border-color:
+                rgba(37,135,255,.3);
+
+            color: white;
+        }
+
+        .menu-icon {
+            width: 31px;
+            height: 31px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                rgba(255,255,255,0.06);
+
+            border-radius: 8px;
+
+            font-size: 16px;
+        }
+
+        .menu-label {
+            flex: 1;
+
+            line-height: 1.25;
+        }
+
+        .menu-label strong {
+            display: block;
+
+            font-size: 12px;
+        }
+
+        .menu-label small {
+            display: block;
+
+            color: #72869c;
+
+            font-size: 9px;
+
+            margin-top: 3px;
+        }
+
+        .add-course-mini {
+            background:
+                rgba(37,135,255,.14);
+
+            border:
+                1px solid
+                rgba(37,135,255,.28);
+
+            color:
+                #79bcff;
+
+            width: 28px;
+            height: 28px;
+
+            border-radius: 8px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+
+            border-top:
+                1px solid
+                var(--border);
+
+            padding-top: 15px;
+        }
+
+        .user-card {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 10px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2587ff,
+                    #5d36ff
+                );
+
+            font-weight: 800;
+        }
+
+        .user-info {
+            min-width: 0;
+
+            flex: 1;
+        }
+
+        .user-info strong {
+            display: block;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            font-size: 12px;
+        }
+
+        .user-info span {
+            display: block;
+
+            color: #73869a;
+
+            font-size: 10px;
+        }
+
+        /* ================================
+           MAIN
+        ================================= */
+
+        .main {
+            flex: 1;
+
+            min-width: 0;
+
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            font-size: 29px;
+
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: var(--text-secondary);
+
+            font-size: 13px;
+        }
+
+        .topbar-right {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+        }
+
+        .sync-status {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #75e6a0;
+
+            background:
+                rgba(34,197,94,.08);
+
+            border:
+                1px solid
+                rgba(34,197,94,.15);
+
+            border-radius: 99px;
+
+            padding:
+                8px 12px;
+
+            font-size: 11px;
+        }
+
+        .sync-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--success);
+        }
+
+        /* ================================
+           HOME
+        ================================= */
+
+        .cover-panel {
+            background:
+                linear-gradient(
+                    120deg,
+                    rgba(37,135,255,.13),
+                    rgba(93,54,255,.08)
+                );
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                var(--radius);
+
+            padding: 24px;
+
+            display: grid;
+
+            grid-template-columns:
+                245px 1fr;
+
+            gap: 28px;
+
+            box-shadow: var(--shadow);
+
+            margin-bottom: 25px;
+        }
+
+        .cover-image {
+            overflow: hidden;
+
+            border-radius: 15px;
+
+            aspect-ratio: 405 / 548;
+
+            box-shadow:
+                0 20px 45px
+                rgba(0,0,0,.35);
+        }
+
+        .cover-image img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .cover-content {
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+        }
+
+        .cover-content .eyebrow {
+            color: #55a7ff;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            font-weight: 800;
+
+            margin-bottom: 10px;
+        }
+
+        .cover-content h2 {
+            font-size: 40px;
+
+            line-height: 1.08;
+
+            margin-bottom: 16px;
+        }
+
+        .cover-content p {
+            color: var(--text-secondary);
+
+            max-width: 630px;
+
+            line-height: 1.7;
+
+            font-size: 14px;
+        }
+
+        .cover-actions {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 22px;
+
+            flex-wrap: wrap;
+        }
+
+        /* ================================
+           CARDS
+        ================================= */
+
+        .section-title {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 13px;
+        }
+
+        .section-title h2 {
+            font-size: 18px;
+        }
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 14px;
+        }
+
+        .subject-card {
+            position: relative;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #0d2238,
+                    #0a1a2b
+                );
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                var(--radius);
+
+            padding: 20px;
+
+            min-height: 180px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            transition: .2s;
+
+            overflow: hidden;
+        }
+
+        .subject-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 120px;
+            height: 120px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(37,135,255,.09);
+
+            top: -45px;
+            right: -45px;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-3px);
+
+            border-color:
+                rgba(37,135,255,.35);
+        }
+
+        .subject-card-icon {
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            font-size: 22px;
+
+            margin-bottom: 16px;
+        }
+
+        .subject-card h3 {
+            font-size: 15px;
+
+            line-height: 1.35;
+
+            margin-bottom: 8px;
+
+            position: relative;
+        }
+
+        .subject-card p {
+            color: var(--text-secondary);
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+            position: relative;
+
+            flex: 1;
+        }
+
+        .subject-card-footer {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-top: 16px;
+
+            position: relative;
+        }
+
+        .arrow-button {
+            width: 35px;
+            height: 35px;
+
+            border-radius: 50%;
+
+            border:
+                1px solid
+                rgba(255,255,255,.15);
+
+            background:
+                rgba(255,255,255,.03);
+
+            color: white;
+
+            font-size: 18px;
+        }
+
+        /* ================================
+           SUBJECT PAGE
+        ================================= */
+
+        .content-layout {
+            display: grid;
+
+            grid-template-columns:
+                290px 1fr;
+
+            gap: 18px;
+        }
+
+        .panel {
+            background:
+                linear-gradient(
+                    180deg,
+                    #0c1d30,
+                    #0a1828
+                );
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                var(--radius);
+
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 16px 18px;
+
+            border-bottom:
+                1px solid
+                var(--border);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+        }
+
+        .panel-header h3 {
+            font-size: 14px;
+        }
+
+        .notes-panel {
+            min-height: 620px;
+        }
+
+        .note-search {
+            padding: 14px;
+
+            border-bottom:
+                1px solid
+                var(--border);
+        }
+
+        .notes-list {
+            max-height: 610px;
+
+            overflow-y: auto;
+        }
+
+        .note-item {
+            padding: 14px;
+
+            border-bottom:
+                1px solid
+                var(--border);
+
+            cursor: pointer;
+
+            transition: .15s;
+        }
+
+        .note-item:hover {
+            background:
+                rgba(255,255,255,.035);
+        }
+
+        .note-item.active {
+            background:
+                rgba(37,135,255,.11);
+
+            border-left:
+                3px solid
+                var(--primary);
+        }
+
+        .note-item strong {
+            display: block;
+
+            font-size: 12px;
+
+            margin-bottom: 6px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+        .note-item small {
+            color: #788da3;
+
+            font-size: 10px;
+        }
+
+        .editor-panel {
+            min-height: 620px;
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+        .editor-header {
+            padding: 14px 16px;
+
+            border-bottom:
+                1px solid
+                var(--border);
+        }
+
+        .editor-title {
+            width: 100%;
+
+            border: none;
+
+            outline: none;
+
+            background: transparent;
+
+            color: white;
+
+            font-size: 22px;
+
+            font-weight: 700;
+
+            padding: 8px 0;
+        }
+
+        .editor-title::placeholder {
+            color: #52667d;
+        }
+
+        .editor-tools {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            margin-top: 8px;
+
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            width: 34px;
+            height: 34px;
+
+            border:
+                1px solid
+                var(--border);
+
+            background:
+                rgba(255,255,255,.03);
+
+            color: #dbe7f3;
+
+            border-radius: 8px;
+        }
+
+        .tool-btn:hover {
+            background:
+                rgba(255,255,255,.08);
+        }
+
+        .course-select-wrap {
+            margin-left: auto;
+
+            min-width: 210px;
+        }
+
+        .course-select {
+            background:
+                #091728;
+
+            border:
+                1px solid
+                var(--border);
+
+            color: white;
+
+            border-radius: 8px;
+
+            padding: 9px;
+
+            width: 100%;
+
+            font-size: 11px;
+        }
+
+        .editor-body {
+            flex: 1;
+
+            padding: 20px;
+        }
+
+        .editor-content {
+            min-height: 430px;
+
+            outline: none;
+
+            color: #dbe6f2;
+
+            line-height: 1.75;
+
+            font-size: 14px;
+        }
+
+        .editor-content:empty::before {
+            content:
+                "Comece a escrever suas anotações aqui...";
+
+            color: #4e637b;
+
+            pointer-events: none;
+        }
+
+        .editor-content h2 {
+            margin:
+                15px 0 8px;
+        }
+
+        .editor-content h3 {
+            margin:
+                15px 0 8px;
+        }
+
+        .editor-content ul,
+        .editor-content ol {
+            padding-left: 25px;
+        }
+
+        .editor-footer {
+            padding: 13px 16px;
+
+            border-top:
+                1px solid
+                var(--border);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+        }
+
+        .last-saved {
+            color: #677b91;
+
+            font-size: 10px;
+        }
+
+        .editor-actions {
+            display: flex;
+
+            gap: 7px;
+        }
+
+        .empty-state {
+            min-height: 400px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 30px;
+        }
+
+        .empty-state-icon {
+            font-size: 44px;
+
+            margin-bottom: 12px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 7px;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+
+            font-size: 12px;
+
+            max-width: 400px;
+
+            line-height: 1.6;
+        }
+
+        /* ================================
+           FACULDADE / COURSES
+        ================================= */
+
+        .course-list {
+            padding: 12px;
+        }
+
+        .course-box {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 12px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 10px;
+
+            margin-bottom: 8px;
+        }
+
+        .course-box-info {
+            min-width: 0;
+
+            flex: 1;
+        }
+
+        .course-box-info strong {
+            display: block;
+
+            font-size: 11px;
+
+            margin-bottom: 3px;
+        }
+
+        .course-box-info span {
+            display: block;
+
+            color: #758aa0;
+
+            font-size: 9px;
+        }
+
+        .delete-course {
+            width: 27px;
+            height: 27px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            background:
+                rgba(239,68,68,.1);
+
+            color: #ff7777;
+        }
+
+        /* ================================
+           MODAL
+        ================================= */
+
+        .modal-overlay {
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0,0,0,.7);
+
+            backdrop-filter: blur(7px);
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 1000;
+        }
+
+        .modal {
+            width: 100%;
+
+            max-width: 500px;
+
+            background:
+                #0c1c2e;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 30px 80px
+                rgba(0,0,0,.5);
+
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 18px;
+
+            border-bottom:
+                1px solid
+                var(--border);
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 16px;
+        }
+
+        .close-modal {
+            width: 32px;
+            height: 32px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            color: white;
+
+            font-size: 18px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+
+            border-top:
+                1px solid
+                var(--border);
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 8px;
+        }
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        .mobile-menu-button {
+            display: none;
+
+            width: 40px;
+            height: 40px;
+
+            border: 1px solid
+                var(--border);
+
+            border-radius: 9px;
+
+            background:
+                rgba(255,255,255,.05);
+
+            color: white;
+        }
+
+        @media (max-width: 1100px) {
+
+            .sidebar {
+                width: 260px;
+            }
+
+            .cards {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .cover-panel {
+                grid-template-columns:
+                    200px 1fr;
+            }
+
+            .content-layout {
+                grid-template-columns:
+                    240px 1fr;
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                position: fixed;
+
+                left: -310px;
+
+                z-index: 900;
+
+                width: 290px;
+
+                transition: .25s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .mobile-menu-button {
+                display: block;
+            }
+
+            .main {
+                padding: 17px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+            }
+
+            .cover-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .cover-image {
+                max-width: 260px;
+
+                margin: 0 auto;
+            }
+
+            .cover-content h2 {
+                font-size: 31px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .content-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .notes-panel {
+                min-height: auto;
+            }
+
+            .notes-list {
+                max-height: 240px;
+            }
+
+            .course-select-wrap {
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+        }
+
+        @media (max-width: 560px) {
+
+            .sync-status {
+                display: none;
+            }
+
+            .page-title h1 {
+                font-size: 23px;
+            }
+
+            .page-title p {
+                display: none;
+            }
+
+            .editor-actions .btn {
+                padding:
+                    10px 11px;
+
+                font-size: 11px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<section id="loginScreen">
+
+    <div class="login-box">
+
+        <div class="login-logo">
+            <img src="capa-caderno-virtual.png" alt="Caderno Virtual">
+        </div>
+
+        <h1 id="authTitle">
+            Meu Caderno Virtual
+        </h1>
+
+        <p class="login-subtitle">
+            Suas anotações sempre com você.
+        </p>
+
+        <form id="authForm">
+
+            <div
+                class="form-group"
+                id="nameGroup"
+                style="display:none;"
+            >
+
+                <label>
+                    Nome
+                </label>
+
+                <input
+                    type="text"
+                    id="nameInput"
+                    class="input"
+                    placeholder="Seu nome"
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    E-mail
+                </label>
+
+                <input
+                    type="email"
+                    id="emailInput"
+                    class="input"
+                    placeholder="seuemail@email.com"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Senha
+                </label>
+
+                <input
+                    type="password"
+                    id="passwordInput"
+                    class="input"
+                    placeholder="Sua senha"
+                    required
+                    minlength="6"
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+                id="authButton"
+            >
+                Entrar
+            </button>
+
+        </form>
+
+        <div
+            id="authMessage"
+        ></div>
+
+        <div class="login-toggle">
+
+            <span id="toggleText">
+                Ainda não possui conta?
+            </span>
+
+            <button
+                type="button"
+                id="toggleAuth"
+            >
+                Criar conta
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     APP
+========================================================= -->
+
+<section id="app">
+
+    <div class="layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="brand">
+
+                <div class="brand-image">
+
+                    <img
+                        src="capa-caderno-virtual.png"
+                        alt="Caderno"
+                    >
+
+                </div>
+
+                <div class="brand-text">
+
+                    <h2>
+                        Meu Caderno Virtual
+                    </h2>
+
+                    <span>
+                        Estudos • Projetos • Conhecimento
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="menu-section-title">
+                Meu conteúdo
+            </div>
+
+
+            <nav
+                class="menu"
+                id="menu"
+            >
+
+                <!-- Será preenchido pelo JavaScript -->
+
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+                <div class="user-card">
+
+                    <div
+                        class="avatar"
+                        id="avatar"
+                    >
+                        E
+                    </div>
+
+                    <div class="user-info">
+
+                        <strong id="userName">
+                            Usuário
+                        </strong>
+
+                        <span id="userEmail">
+                            email
+                        </span>
+
+                    </div>
+
+                    <button
+                        class="btn btn-secondary"
+                        style="
+                            width:32px;
+                            height:32px;
+                            padding:0;
+                        "
+                        id="logoutButton"
+                        title="Sair"
+                    >
+                        ↪
+                    </button>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             MAIN
+        ====================================================== -->
+
+        <main class="main">
+
+            <div class="topbar">
+
+                <div style="
+                    display:flex;
+                    gap:10px;
+                    align-items:flex-start;
+                ">
+
+                    <button
+                        class="mobile-menu-button"
+                        id="mobileMenuButton"
+                    >
+                        ☰
+                    </button>
+
+                    <div class="page-title">
+
+                        <h1 id="pageTitle">
+                            Olá!
+                        </h1>
+
+                        <p id="pageSubtitle">
+                            Organize seus estudos em um único lugar.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="topbar-right">
+
+                    <div class="sync-status">
+
+                        <span class="sync-dot"></span>
+
+                        <span id="syncText">
+                            Sincronizado
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 HOME
+            ================================================== -->
+
+            <section
+                id="homePage"
+            >
+
+                <div class="cover-panel">
+
+                    <div class="cover-image">
+
+                        <img
+                            src="capa-caderno-virtual.png"
+                            alt="Meu Caderno Virtual"
+                        >
+
+                    </div>
+
+                    <div class="cover-content">
+
+                        <div class="eyebrow">
+                            SEU ESPAÇO DE APRENDIZADO
+                        </div>
+
+                        <h2>
+                            Estude.
+                            <br>
+                            Anote.
+                            <br>
+                            Evolua.
+                        </h2>
+
+                        <p>
+
+                            Um caderno virtual para acompanhar
+                            sua faculdade, seus cursos,
+                            projetos e tudo que você aprender
+                            durante sua jornada.
+
+                        </p>
+
+                        <div class="cover-actions">
+
+                            <button
+                                class="btn btn-primary"
+                                id="startStudyButton"
+                            >
+                                Começar a estudar
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="section-title">
+
+                    <h2>
+                        Minhas matérias
+                    </h2>
+
+                </div>
+
+
+                <div
+                    class="cards"
+                    id="subjectCards"
+                >
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SUBJECT PAGE
+            ================================================== -->
+
+            <section
+                id="subjectPage"
+                style="display:none;"
+            >
+
+                <div
+                    class="content-layout"
+                >
+
+                    <!-- NOTAS -->
+
+                    <div class="panel notes-panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <h3>
+                                    Minhas anotações
+                                </h3>
+
+                            </div>
+
+                            <button
+                                class="btn btn-primary"
+                                style="
+                                    width:auto;
+                                    padding:
+                                        8px 11px;
+                                    font-size:10px;
+                                "
+                                id="newNoteButton"
+                            >
+                                + Nova
+                            </button>
+
+                        </div>
+
+
+                        <div class="note-search">
+
+                            <input
+                                type="text"
+                                id="noteSearch"
+                                class="input"
+                                placeholder="Pesquisar anotação..."
+                            >
+
+                        </div>
+
+
+                        <div
+                            class="notes-list"
+                            id="notesList"
+                        >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EDITOR -->
+
+                    <div class="panel editor-panel">
+
+                        <div
+                            id="editorEmpty"
+                            class="empty-state"
+                        >
+
+                            <div class="empty-state-icon">
+                                📝
+                            </div>
+
+                            <h3>
+                                Nenhuma anotação aberta
+                            </h3>
+
+                            <p>
+
+                                Crie uma nova anotação para
+                                começar a registrar o conteúdo
+                                dos seus estudos.
+
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="editorArea"
+                            style="display:none; height:100%;"
+                        >
+
+                            <div class="editor-header">
+
+                                <input
+                                    type="text"
+                                    id="noteTitle"
+                                    class="editor-title"
+                                    placeholder="Título da anotação"
+                                >
+
+
+                                <div class="editor-tools">
+
+                                    <button
+                                        class="tool-btn"
+                                        data-command="bold"
+                                        title="Negrito"
+                                    >
+                                        <b>B</b>
+                                    </button>
+
+                                    <button
+                                        class="tool-btn"
+                                        data-command="italic"
+                                        title="Itálico"
+                                    >
+                                        <i>I</i>
+                                    </button>
+
+                                    <button
+                                        class="tool-btn"
+                                        data-command="underline"
+                                        title="Sublinhado"
+                                    >
+                                        <u>U</u>
+                                    </button>
+
+                                    <button
+                                        class="tool-btn"
+                                        data-command="insertUnorderedList"
+                                        title="Lista"
+                                    >
+                                        ☷
+                                    </button>
+
+                                    <button
+                                        class="tool-btn"
+                                        data-command="insertOrderedList"
+                                        title="Lista numerada"
+                                    >
+                                        ≡
+                                    </button>
+
+                                    <button
+                                        class="tool-btn"
+                                        id="headingButton"
+                                        title="Título"
+                                    >
+                                        H
+                                    </button>
+
+
+                                    <div
+                                        class="course-select-wrap"
+                                        id="courseSelectWrap"
+                                        style="display:none;"
+                                    >
+
+                                        <select
+                                            id="courseSelect"
+                                            class="course-select"
+                                        >
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="editor-body">
+
+                                <div
+                                    id="editorContent"
+                                    class="editor-content"
+                                    contenteditable="true"
+                                    spellcheck="true"
+                                >
+                                </div>
+
+                            </div>
+
+
+                            <div class="editor-footer">
+
+                                <div
+                                    class="last-saved"
+                                    id="lastSaved"
+                                >
+                                    Não salvo
+                                </div>
+
+                                <div class="editor-actions">
+
+                                    <button
+                                        class="btn btn-danger"
+                                        id="deleteNoteButton"
+                                    >
+                                        Excluir
+                                    </button>
+
+                                    <button
+                                        class="btn btn-primary"
+                                        style="width:auto;"
+                                        id="saveNoteButton"
+                                    >
+                                        Salvar
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     MODAL CADIERAS ADS
+========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="courseModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>
+                Adicionar cadeira da ADS
+            </h3>
+
+            <button
+                class="close-modal"
+                id="closeCourseModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div class="form-group">
+
+                <label>
+                    Nome da cadeira
+                </label>
+
+                <input
+                    type="text"
+                    class="input"
+                    id="courseNameInput"
+                    placeholder="Ex.: Banco de Dados"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Semestre
+                </label>
+
+                <select
+                    class="input"
+                    id="courseSemesterInput"
+                >
+
+                    <option>
+                        1º Semestre
+                    </option>
+
+                    <option>
+                        2º Semestre
+                    </option>
+
+                    <option>
+                        3º Semestre
+                    </option>
+
+                    <option>
+                        4º Semestre
+                    </option>
+
+                    <option>
+                        5º Semestre
+                    </option>
+
+                    <option>
+                        6º Semestre
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Descrição
+                </label>
+
+                <textarea
+                    class="input"
+                    id="courseDescriptionInput"
+                    rows="4"
+                    placeholder="Descrição opcional..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn btn-secondary"
+                id="cancelCourseButton"
+            >
+                Cancelar
+            </button>
+
+            <button
+                class="btn btn-primary"
+                style="width:auto;"
+                id="saveCourseButton"
+            >
+                Adicionar cadeira
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     SUPABASE
+========================================================= -->
+
+<script type="module">
+
+    import {
+        createClient
+    }
+    from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+
+    /* ========================================================
+       COLOQUE AQUI OS DADOS DO SEU SUPABASE
+       ======================================================== */
+
+    const SUPABASE_URL =
+        "COLE_AQUI_A_URL_DO_SEU_SUPABASE";
+
+    const SUPABASE_ANON_KEY =
+        "COLE_AQUI_A_ANON_KEY_DO_SEU_SUPABASE";
+
+
+    const supabase =
+        createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
+
+
+    /* ========================================================
+       ELEMENTOS
+       ======================================================== */
+
+    const loginScreen =
+        document.getElementById("loginScreen");
+
+    const app =
+        document.getElementById("app");
+
+    const authForm =
+        document.getElementById("authForm");
+
+    const authTitle =
+        document.getElementById("authTitle");
+
+    const authButton =
+        document.getElementById("authButton");
+
+    const toggleAuth =
+        document.getElementById("toggleAuth");
+
+    const toggleText =
+        document.getElementById("toggleText");
+
+    const nameGroup =
+        document.getElementById("nameGroup");
+
+    const nameInput =
+        document.getElementById("nameInput");
+
+    const emailInput =
+        document.getElementById("emailInput");
+
+    const passwordInput =
+        document.getElementById("passwordInput");
+
+    const authMessage =
+        document.getElementById("authMessage");
+
+    const menu =
+        document.getElementById("menu");
+
+    const subjectCards =
+        document.getElementById("subjectCards");
+
+    const homePage =
+        document.getElementById("homePage");
+
+    const subjectPage =
+        document.getElementById("subjectPage");
+
+    const pageTitle =
+        document.getElementById("pageTitle");
+
+    const pageSubtitle =
+        document.getElementById("pageSubtitle");
+
+    const notesList =
+        document.getElementById("notesList");
+
+    const noteSearch =
+        document.getElementById("noteSearch");
+
+    const editorEmpty =
+        document.getElementById("editorEmpty");
+
+    const editorArea =
+        document.getElementById("editorArea");
+
+    const noteTitle =
+        document.getElementById("noteTitle");
+
+    const editorContent =
+        document.getElementById("editorContent");
+
+    const saveNoteButton =
+        document.getElementById("saveNoteButton");
+
+    const deleteNoteButton =
+        document.getElementById("deleteNoteButton");
+
+    const newNoteButton =
+        document.getElementById("newNoteButton");
+
+    const lastSaved =
+        document.getElementById("lastSaved");
+
+    const courseSelectWrap =
+        document.getElementById("courseSelectWrap");
+
+    const courseSelect =
+        document.getElementById("courseSelect");
+
+    const courseModal =
+        document.getElementById("courseModal");
+
+    const closeCourseModal =
+        document.getElementById("closeCourseModal");
+
+    const cancelCourseButton =
+        document.getElementById("cancelCourseButton");
+
+    const saveCourseButton =
+        document.getElementById("saveCourseButton");
+
+    const courseNameInput =
+        document.getElementById("courseNameInput");
+
+    const courseSemesterInput =
+        document.getElementById("courseSemesterInput");
+
+    const courseDescriptionInput =
+        document.getElementById("courseDescriptionInput");
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+    const userName =
+        document.getElementById("userName");
+
+    const userEmail =
+        document.getElementById("userEmail");
+
+    const avatar =
+        document.getElementById("avatar");
+
+    const syncText =
+        document.getElementById("syncText");
+
+    const mobileMenuButton =
+        document.getElementById("mobileMenuButton");
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const startStudyButton =
+        document.getElementById("startStudyButton");
+
+    const headingButton =
+        document.getElementById("headingButton");
+
+
+    /* ========================================================
+       ESTADO
+       ======================================================== */
+
+    let isRegistering = false;
+
+    let currentUser = null;
+
+    let subjects = [];
+
+    let courses = [];
+
+    let notes = [];
+
+    let currentSubject = null;
+
+    let currentNote = null;
+
+    let saveTimer = null;
+
+
+    /* ========================================================
+       MATÉRIAS PADRÃO
+       ======================================================== */
+
+    const defaultSubjects = [
+
+        {
+            name: "Faculdade ADS",
+            description:
+                "Faculdade de Análise e Desenvolvimento de Sistemas.",
+            icon: "🎓",
+            sort_order: 1
+        },
+
+        {
+            name:
+                "Inteligência Artificial: do zero ao avançado (2026)",
+            description:
+                "Curso completo de Inteligência Artificial.",
+            icon: "🧠",
+            sort_order: 2
+        },
+
+        {
+            name:
+                "Python 3 do básico ao avançado - com projetos reais",
+            description:
+                "Python 3 com projetos práticos.",
+            icon: "🐍",
+            sort_order: 3
+        },
+
+        {
+            name:
+                "Programação em Python do básico ao avançado",
+            description:
+                "Programação utilizando Python.",
+            icon: "💻",
+            sort_order: 4
+        },
+
+        {
+            name:
+                "Banco de Dados SQL do zero ao avançado + projetos reais",
+            description:
+                "Banco de dados, SQL e projetos.",
+            icon: "🗄️",
+            sort_order: 5
+        },
+
+        {
+            name:
+                "Desenvolvimento Web completo - 20 cursos + 20 projetos",
+            description:
+                "Desenvolvimento web completo.",
+            icon: "🌐",
+            sort_order: 6
+        }
+
+    ];
+
+
+    /* ========================================================
+       UTIL
+       ======================================================== */
+
+    function showMessage(
+        message,
+        type = "error"
+    ) {
+
+        authMessage.textContent =
+            message;
+
+        authMessage.className =
+            type === "success"
+                ? "success-message"
+                : "error-message";
+
+    }
+
+
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent =
+            text || "";
+
+        return div.innerHTML;
+
+    }
+
+
+    function formatDate(dateString) {
+
+        if (!dateString) {
+            return "";
+        }
+
+        const date =
+            new Date(dateString);
+
+        return date.toLocaleString(
+            "pt-BR",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        );
+
+    }
+
+
+    function setSync(
+        text,
+        status = "ok"
+    ) {
+
+        syncText.textContent =
+            text;
+
+    }
+
+
+    /* ========================================================
+       AUTH TOGGLE
+       ======================================================== */
+
+    toggleAuth.addEventListener(
+        "click",
+        () => {
+
+            isRegistering =
+                !isRegistering;
+
+            nameGroup.style.display =
+                isRegistering
+                    ? "block"
+                    : "none";
+
+            authTitle.textContent =
+                isRegistering
+                    ? "Criar meu caderno"
+                    : "Meu Caderno Virtual";
+
+            authButton.textContent =
+                isRegistering
+                    ? "Criar conta"
+                    : "Entrar";
+
+            toggleText.textContent =
+                isRegistering
+                    ? "Já possui uma conta?"
+                    : "Ainda não possui conta?";
+
+            toggleAuth.textContent =
+                isRegistering
+                    ? "Entrar"
+                    : "Criar conta";
+
+            authMessage.textContent =
+                "";
+
+        }
+    );
+
+
+    /* ========================================================
+       LOGIN / CADASTRO
+       ======================================================== */
+
+    authForm.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+            const email =
+                emailInput.value.trim();
+
+            const password =
+                passwordInput.value.trim();
+
+            try {
+
+                authButton.disabled =
+                    true;
+
+                authButton.textContent =
+                    "Aguarde...";
+
+                if (isRegistering) {
+
+                    const name =
+                        nameInput.value.trim();
+
+                    const {
+                        error
+                    } =
+                        await supabase.auth.signUp({
+
+                            email,
+
+                            password,
+
+                            options: {
+
+                                data: {
+                                    full_name:
+                                        name
+                                }
+
+                            }
+
+                        });
+
+                    if (error) {
+                        throw error;
+                    }
+
+                    showMessage(
+                        "Conta criada. Verifique seu e-mail para confirmar o cadastro.",
+                        "success"
+                    );
+
+                } else {
+
+                    const {
+                        error
+                    } =
+                        await supabase.auth
+                            .signInWithPassword({
+
+                                email,
+                                password
+
+                            });
+
+                    if (error) {
+                        throw error;
+                    }
+
+                }
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    error.message ||
+                    "Não foi possível realizar a operação."
+                );
+
+            }
+            finally {
+
+                authButton.disabled =
+                    false;
+
+                authButton.textContent =
+                    isRegistering
+                        ? "Criar conta"
+                        : "Entrar";
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       SESSION
+       ======================================================== */
+
+    async function initialize() {
+
+        const {
+            data
+        } =
+            await supabase.auth.getSession();
+
+        if (
+            data &&
+            data.session &&
+            data.session.user
+        ) {
+
+            currentUser =
+                data.session.user;
+
+            await startApplication();
+
+        }
+
+    }
+
+
+    supabase.auth.onAuthStateChange(
+        async (
+            event,
+            session
+        ) => {
+
+            if (
+                session &&
+                session.user
+            ) {
+
+                currentUser =
+                    session.user;
+
+                await startApplication();
+
+            }
+            else {
+
+                showLogin();
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       SHOW LOGIN
+       ======================================================== */
+
+    function showLogin() {
+
+        loginScreen.style.display =
+            "flex";
+
+        app.style.display =
+            "none";
+
+    }
+
+
+    /* ========================================================
+       START APP
+       ======================================================== */
+
+    async function startApplication() {
+
+        loginScreen.style.display =
+            "none";
+
+        app.style.display =
+            "block";
+
+        const name =
+            currentUser.user_metadata?.full_name
+            ||
+            currentUser.email
+            ||
+            "Usuário";
+
+        userName.textContent =
+            name;
+
+        userEmail.textContent =
+            currentUser.email || "";
+
+        avatar.textContent =
+            name
+                .charAt(0)
+                .toUpperCase();
+
+        await ensureDefaultSubjects();
+
+        await loadSubjects();
+
+        renderMenu();
+
+        renderSubjectCards();
+
+        goHome();
+
+    }
+
+
+    /* ========================================================
+       GARANTIR MATÉRIAS
+       ======================================================== */
+
+    async function ensureDefaultSubjects() {
+
+        const rows =
+            defaultSubjects.map(
+                item => ({
+
+                    user_id:
+                        currentUser.id,
+
+                    name:
+                        item.name,
+
+                    description:
+                        item.description,
+
+                    icon:
+                        item.icon,
+
+                    sort_order:
+                        item.sort_order
+
+                })
+            );
+
+        const {
+            error
+        } =
+            await supabase
+                .from("subjects")
+                .upsert(
+                    rows,
+                    {
+                        onConflict:
+                            "user_id,name"
+                    }
+                );
+
+        if (error) {
+
+            console.error(
+                "Erro ao garantir matérias:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* ========================================================
+       LOAD SUBJECTS
+       ======================================================== */
+
+    async function loadSubjects() {
+
+        const {
+            data,
+            error
+        } =
+            await supabase
+                .from("subjects")
+                .select("*")
+                .order("sort_order");
+
+        if (error) {
+
+            console.error(error);
+
+            return;
+
+        }
+
+        subjects =
+            data || [];
+
+    }
+
+
+    /* ========================================================
+       MENU
+       ======================================================== */
+
+    function renderMenu() {
+
+        menu.innerHTML =
+            "";
+
+        const homeButton =
+            document.createElement("button");
+
+        homeButton.className =
+            "menu-item active";
+
+        homeButton.innerHTML = `
+            <div class="menu-icon">⌂</div>
+
+            <div class="menu-label">
+                <strong>Início</strong>
+                <small>Visão geral</small>
+            </div>
+        `;
+
+        homeButton.addEventListener(
+            "click",
+            () => {
+
+                goHome();
+
+                closeMobileMenu();
+
+                document
+                    .querySelectorAll(".menu-item")
+                    .forEach(
+                        element =>
+                            element.classList.remove("active")
+                    );
+
+                homeButton.classList.add("active");
+
+            }
+        );
+
+        menu.appendChild(
+            homeButton
+        );
+
+
+        subjects.forEach(
+            subject => {
+
+                const button =
+                    document.createElement("button");
+
+                button.className =
+                    "menu-item";
+
+                const isFaculty =
+                    subject.name ===
+                    "Faculdade ADS";
+
+                button.innerHTML = `
+
+                    <div class="menu-icon">
+                        ${escapeHtml(subject.icon)}
+                    </div>
+
+                    <div class="menu-label">
+
+                        <strong>
+                            ${escapeHtml(subject.name)}
+                        </strong>
+
+                        <small>
+                            ${escapeHtml(
+                                subject.description || ""
+                            )}
+                        </small>
+
+                    </div>
+
+                    ${
+                        isFaculty
+                        ?
+                        `
+                        <button
+                            class="add-course-mini"
+                            title="Adicionar cadeira"
+                        >
+                            +
+                        </button>
+                        `
+                        :
+                        ""
+                    }
+
+                `;
+
+                const addButton =
+                    button.querySelector(
+                        ".add-course-mini"
+                    );
+
+                if (addButton) {
+
+                    addButton.addEventListener(
+                        "click",
+                        event => {
+
+                            event.stopPropagation();
+
+                            openCourseModal();
+
+                        }
+                    );
+
+                }
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        document
+                            .querySelectorAll(".menu-item")
+                            .forEach(
+                                element =>
+                                    element.classList.remove("active")
+                            );
+
+                        button.classList.add("active");
+
+                        openSubject(
+                            subject
+                        );
+
+                        closeMobileMenu();
+
+                    }
+                );
+
+                menu.appendChild(
+                    button
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       SUBJECT CARDS
+       ======================================================== */
+
+    function renderSubjectCards() {
+
+        subjectCards.innerHTML =
+            "";
+
+        subjects.forEach(
+            subject => {
+
+                const card =
+                    document.createElement("article");
+
+                card.className =
+                    "subject-card";
+
+                card.innerHTML = `
+
+                    <div class="subject-card-icon">
+
+                        ${escapeHtml(subject.icon)}
+
+                    </div>
+
+                    <h3>
+                        ${escapeHtml(subject.name)}
+                    </h3>
+
+                    <p>
+                        ${escapeHtml(
+                            subject.description || ""
+                        )}
+                    </p>
+
+                    <div class="subject-card-footer">
+
+                        ${
+                            subject.name ===
+                            "Faculdade ADS"
+                            ?
+                            `
+                            <button
+                                class="btn btn-secondary add-card-course"
+                                style="
+                                    font-size:10px;
+                                    padding:8px 10px;
+                                "
+                            >
+                                + Cadeira
+                            </button>
+                            `
+                            :
+                            "<span></span>"
+                        }
+
+                        <button class="arrow-button">
+                            →
+                        </button>
+
+                    </div>
+
+                `;
+
+                card.addEventListener(
+                    "click",
+                    event => {
+
+                        if (
+                            event.target.closest(
+                                ".add-card-course"
+                            )
+                        ) {
+
+                            openCourseModal();
+
+                            return;
+
+                        }
+
+                        openSubject(
+                            subject
+                        );
+
+                    }
+                );
+
+                subjectCards.appendChild(
+                    card
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       HOME
+       ======================================================== */
+
+    function goHome() {
+
+        homePage.style.display =
+            "block";
+
+        subjectPage.style.display =
+            "none";
+
+        pageTitle.textContent =
+            `Olá, ${
+                currentUser?.user_metadata
+                    ?.full_name
+                    ?.split(" ")[0]
+                ||
+                "estudante"
+            }!`;
+
+        pageSubtitle.textContent =
+            "Seu caderno virtual, sempre com você.";
+
+    }
+
+
+    startStudyButton.addEventListener(
+        "click",
+        () => {
+
+            if (subjects.length > 0) {
+
+                openSubject(
+                    subjects[0]
+                );
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       ABRIR MATÉRIA
+       ======================================================== */
+
+    async function openSubject(subject) {
+
+        currentSubject =
+            subject;
+
+        homePage.style.display =
+            "none";
+
+        subjectPage.style.display =
+            "block";
+
+        pageTitle.textContent =
+            subject.name;
+
+        pageSubtitle.textContent =
+            subject.description ||
+            "Suas anotações";
+
+        await loadCourses();
+
+        updateCourseSelector();
+
+        await loadNotes();
+
+        currentNote =
+            null;
+
+        editorArea.style.display =
+            "none";
+
+        editorEmpty.style.display =
+            "flex";
+
+        noteSearch.value =
+            "";
+
+        renderNotes();
+
+    }
+
+
+    /* ========================================================
+       LOAD COURSES
+       ======================================================== */
+
+    async function loadCourses() {
+
+        if (!currentSubject) {
+            return;
+        }
+
+        const {
+            data,
+            error
+        } =
+            await supabase
+                .from("courses")
+                .select("*")
+                .eq(
+                    "subject_id",
+                    currentSubject.id
+                )
+                .order("sort_order")
+                .order("name");
+
+        if (error) {
+
+            console.error(error);
+
+            courses =
+                [];
+
+            return;
+
+        }
+
+        courses =
+            data || [];
+
+    }
+
+
+    /* ========================================================
+       COURSE SELECT
+       ======================================================== */
+
+    function updateCourseSelector() {
+
+        const faculty =
+            currentSubject?.name ===
+            "Faculdade ADS";
+
+        courseSelectWrap.style.display =
+            faculty
+                ? "block"
+                : "none";
+
+        if (!faculty) {
+            return;
+        }
+
+        courseSelect.innerHTML = `
+            <option value="">
+                Sem cadeira específica
+            </option>
+        `;
+
+        courses.forEach(
+            course => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value =
+                    course.id;
+
+                option.textContent =
+                    course.name;
+
+                courseSelect.appendChild(
+                    option
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       NOTES
+       ======================================================== */
+
+    async function loadNotes() {
+
+        if (!currentSubject) {
+            return;
+        }
+
+        const {
+            data,
+            error
+        } =
+            await supabase
+                .from("notes")
+                .select(`
+                    *,
+                    courses (
+                        id,
+                        name
+                    )
+                `)
+                .eq(
+                    "subject_id",
+                    currentSubject.id
+                )
+                .order(
+                    "updated_at",
+                    {
+                        ascending:false
+                    }
+                );
+
+        if (error) {
+
+            console.error(error);
+
+            notes =
+                [];
+
+            return;
+
+        }
+
+        notes =
+            data || [];
+
+    }
+
+
+    function renderNotes() {
+
+        const search =
+            noteSearch.value
+                .trim()
+                .toLowerCase();
+
+        notesList.innerHTML =
+            "";
+
+        const filtered =
+            notes.filter(
+                note => {
+
+                    const text =
+                        (
+                            note.title +
+                            " " +
+                            note.content
+                        )
+                        .toLowerCase();
+
+                    return text.includes(
+                        search
+                    );
+
+                }
+            );
+
+        if (
+            filtered.length ===
+            0
+        ) {
+
+            notesList.innerHTML = `
+
+                <div
+                    style="
+                        padding:30px 15px;
+                        text-align:center;
+                        color:#71869c;
+                        font-size:11px;
+                    "
+                >
+                    Nenhuma anotação encontrada.
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        filtered.forEach(
+            note => {
+
+                const item =
+                    document.createElement("div");
+
+                item.className =
+                    "note-item";
+
+                if (
+                    currentNote &&
+                    currentNote.id === note.id
+                ) {
+
+                    item.classList.add(
+                        "active"
+                    );
+
+                }
+
+                const plainText =
+                    document
+                        .createElement("div");
+
+                plainText.innerHTML =
+                    DOMPurify.sanitize(
+                        note.content || ""
+                    );
+
+                item.innerHTML = `
+
+                    <strong>
+                        ${escapeHtml(
+                            note.title ||
+                            "Sem título"
+                        )}
+                    </strong>
+
+                    <small>
+                        ${
+                            note.courses?.name
+                            ||
+                            "Anotação geral"
+                        }
+                        •
+                        ${
+                            formatDate(
+                                note.updated_at
+                            )
+                        }
+                    </small>
+
+                `;
+
+                item.addEventListener(
+                    "click",
+                    () => {
+
+                        openNote(
+                            note
+                        );
+
+                    }
+                );
+
+                notesList.appendChild(
+                    item
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       NEW NOTE
+       ======================================================== */
+
+    newNoteButton.addEventListener(
+        "click",
+        async () => {
+
+            if (!currentSubject) {
+                return;
+            }
+
+            setSync(
+                "Salvando..."
+            );
+
+            const {
+                data,
+                error
+            } =
+                await supabase
+                    .from("notes")
+                    .insert({
+
+                        user_id:
+                            currentUser.id,
+
+                        subject_id:
+                            currentSubject.id,
+
+                        title:
+                            "Nova anotação",
+
+                        content:
+                            ""
+
+                    })
+                    .select(`
+                        *,
+                        courses (
+                            id,
+                            name
+                        )
+                    `)
+                    .single();
+
+            if (error) {
+
+                console.error(error);
+
+                alert(
+                    "Não foi possível criar a anotação."
+                );
+
+                setSync(
+                    "Erro"
+                );
+
+                return;
+
+            }
+
+            notes.unshift(
+                data
+            );
+
+            openNote(
+                data
+            );
+
+            setSync(
+                "Sincronizado"
+            );
+
+        }
+    );
+
+
+    /* ========================================================
+       OPEN NOTE
+       ======================================================== */
+
+    function openNote(note) {
+
+        currentNote =
+            note;
+
+        editorEmpty.style.display =
+            "none";
+
+        editorArea.style.display =
+            "flex";
+
+        editorArea.style.flexDirection =
+            "column";
+
+        noteTitle.value =
+            note.title || "";
+
+        editorContent.innerHTML =
+            DOMPurify.sanitize(
+                note.content || ""
+            );
+
+        if (
+            currentSubject.name ===
+            "Faculdade ADS"
+        ) {
+
+            courseSelectWrap.style.display =
+                "block";
+
+            courseSelect.value =
+                note.course_id ||
+                "";
+
+        } else {
+
+            courseSelectWrap.style.display =
+                "none";
+
+        }
+
+        lastSaved.textContent =
+            "Última edição: " +
+            formatDate(
+                note.updated_at
+            );
+
+        renderNotes();
+
+    }
+
+
+    /* ========================================================
+       SAVE NOTE
+       ======================================================== */
+
+    async function saveCurrentNote(
+        showAlert = false
+    ) {
+
+        if (!currentNote) {
+            return;
+        }
+
+        setSync(
+            "Salvando..."
+        );
+
+        const title =
+            noteTitle.value.trim()
+            ||
+            "Sem título";
+
+        const content =
+            editorContent.innerHTML;
+
+        const courseId =
+            currentSubject?.name ===
+            "Faculdade ADS"
+                ? (
+                    courseSelect.value ||
+                    null
+                )
+                : null;
+
+        const {
+            data,
+            error
+        } =
+            await supabase
+                .from("notes")
+                .update({
+
+                    title,
+
+                    content,
+
+                    course_id:
+                        courseId
+
+                })
+                .eq(
+                    "id",
+                    currentNote.id
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .select(`
+                    *,
+                    courses (
+                        id,
+                        name
+                    )
+                `)
+                .single();
+
+        if (error) {
+
+            console.error(error);
+
+            setSync(
+                "Erro ao salvar"
+            );
+
+            if (showAlert) {
+
+                alert(
+                    "Não foi possível salvar."
+                );
+
+            }
+
+            return;
+
+        }
+
+        currentNote =
+            data;
+
+        const index =
+            notes.findIndex(
+                item =>
+                    item.id ===
+                    data.id
+            );
+
+        if (index >= 0) {
+
+            notes[index] =
+                data;
+
+        }
+
+        lastSaved.textContent =
+            "Última edição: " +
+            formatDate(
+                data.updated_at
+            );
+
+        renderNotes();
+
+        setSync(
+            "Sincronizado"
+        );
+
+    }
+
+
+    saveNoteButton.addEventListener(
+        "click",
+        () => {
+
+            saveCurrentNote(
+                true
+            );
+
+        }
+    );
+
+
+    /* ========================================================
+       AUTO SAVE
+       ======================================================== */
+
+    function scheduleAutoSave() {
+
+        clearTimeout(
+            saveTimer
+        );
+
+        saveTimer =
+            setTimeout(
+                () => {
+
+                    if (currentNote) {
+
+                        saveCurrentNote(
+                            false
+                        );
+
+                    }
+
+                },
+                1400
+            );
+
+    }
+
+
+    noteTitle.addEventListener(
+        "input",
+        scheduleAutoSave
+    );
+
+    editorContent.addEventListener(
+        "input",
+        scheduleAutoSave
+    );
+
+    courseSelect.addEventListener(
+        "change",
+        scheduleAutoSave
+    );
+
+
+    /* ========================================================
+       DELETE NOTE
+       ======================================================== */
+
+    deleteNoteButton.addEventListener(
+        "click",
+        async () => {
+
+            if (!currentNote) {
+                return;
+            }
+
+            const confirmDelete =
+                confirm(
+                    "Deseja realmente excluir esta anotação?"
+                );
+
+            if (!confirmDelete) {
+                return;
+            }
+
+            setSync(
+                "Excluindo..."
+            );
+
+            const {
+                error
+            } =
+                await supabase
+                    .from("notes")
+                    .delete()
+                    .eq(
+                        "id",
+                        currentNote.id
+                    )
+                    .eq(
+                        "user_id",
+                        currentUser.id
+                    );
+
+            if (error) {
+
+                console.error(error);
+
+                setSync(
+                    "Erro"
+                );
+
+                return;
+
+            }
+
+            notes =
+                notes.filter(
+                    note =>
+                        note.id !==
+                        currentNote.id
+                );
+
+            currentNote =
+                null;
+
+            editorArea.style.display =
+                "none";
+
+            editorEmpty.style.display =
+                "flex";
+
+            renderNotes();
+
+            setSync(
+                "Sincronizado"
+            );
+
+        }
+    );
+
+
+    /* ========================================================
+       SEARCH
+       ======================================================== */
+
+    noteSearch.addEventListener(
+        "input",
+        renderNotes
+    );
+
+
+    /* ========================================================
+       EDITOR TOOLS
+       ======================================================== */
+
+    document
+        .querySelectorAll(
+            ".tool-btn"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        const command =
+                            button.dataset.command;
+
+                        if (!command) {
+                            return;
+                        }
+
+                        editorContent.focus();
+
+                        document.execCommand(
+                            command,
+                            false,
+                            null
+                        );
+
+                        scheduleAutoSave();
+
+                    }
+                );
+
+            }
+        );
+
+
+    headingButton.addEventListener(
+        "click",
+        () => {
+
+            editorContent.focus();
+
+            document.execCommand(
+                "formatBlock",
+                false,
+                "h2"
+            );
+
+            scheduleAutoSave();
+
+        }
+    );
+
+
+    /* ========================================================
+       COURSES MODAL
+       ======================================================== */
+
+    function openCourseModal() {
+
+        if (!currentUser) {
+            return;
+        }
+
+        courseNameInput.value =
+            "";
+
+        courseDescriptionInput.value =
+            "";
+
+        courseSemesterInput.selectedIndex =
+            0;
+
+        courseModal.style.display =
+            "flex";
+
+    }
+
+
+    function closeCourseModalFunction() {
+
+        courseModal.style.display =
+            "none";
+
+    }
+
+
+    closeCourseModal.addEventListener(
+        "click",
+        closeCourseModalFunction
+    );
+
+    cancelCourseButton.addEventListener(
+        "click",
+        closeCourseModalFunction
+    );
+
+
+    saveCourseButton.addEventListener(
+        "click",
+        async () => {
+
+            const name =
+                courseNameInput.value.trim();
+
+            if (!name) {
+
+                alert(
+                    "Digite o nome da cadeira."
+                );
+
+                return;
+
+            }
+
+            const faculty =
+                subjects.find(
+                    subject =>
+                        subject.name ===
+                        "Faculdade ADS"
+                );
+
+            if (!faculty) {
+                return;
+            }
+
+            saveCourseButton.disabled =
+                true;
+
+            saveCourseButton.textContent =
+                "Salvando...";
+
+            const {
+                data,
+                error
+            } =
+                await supabase
+                    .from("courses")
+                    .insert({
+
+                        user_id:
+                            currentUser.id,
+
+                        subject_id:
+                            faculty.id,
+
+                        name,
+
+                        semester:
+                            courseSemesterInput.value,
+
+                        description:
+                            courseDescriptionInput
+                                .value
+                                .trim(),
+
+                        sort_order:
+                            courses.length + 1
+
+                    })
+                    .select("*")
+                    .single();
+
+            if (error) {
+
+                console.error(error);
+
+                alert(
+                    error.message
+                    ||
+                    "Não foi possível adicionar a cadeira."
+                );
+
+            }
+            else {
+
+                closeCourseModalFunction();
+
+                if (
+                    currentSubject &&
+                    currentSubject.id ===
+                    faculty.id
+                ) {
+
+                    await loadCourses();
+
+                    updateCourseSelector();
+
+                }
+
+                alert(
+                    "Cadeira adicionada com sucesso."
+                );
+
+            }
+
+            saveCourseButton.disabled =
+                false;
+
+            saveCourseButton.textContent =
+                "Adicionar cadeira";
+
+        }
+    );
+
+
+    /* ========================================================
+       LOGOUT
+       ======================================================== */
+
+    logoutButton.addEventListener(
+        "click",
+        async () => {
+
+            await supabase.auth.signOut();
+
+            currentUser =
+                null;
+
+            currentSubject =
+                null;
+
+            currentNote =
+                null;
+
+            showLogin();
+
+        }
+    );
+
+
+    /* ========================================================
+       MOBILE MENU
+       ======================================================== */
+
+    mobileMenuButton.addEventListener(
+        "click",
+        () => {
+
+            sidebar.classList.toggle(
+                "open"
+            );
+
+        }
+    );
+
+
+    function closeMobileMenu() {
+
+        sidebar.classList.remove(
+            "open"
+        );
+
+    }
+
+
+    /* ========================================================
+       START
+       ======================================================== */
+
+    initialize();
+
+</script>
+
+</body>
+
+</html>
